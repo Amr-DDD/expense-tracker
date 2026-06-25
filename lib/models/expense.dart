@@ -6,7 +6,6 @@ final formater = DateFormat.yMd();
 const uuid = Uuid();
 
 enum Category { food, travel, freetime, work }
-// "enum" creates new custom type that accepts certain values
 
 const categoryIcon = {
   Category.food: Icons.lunch_dining,

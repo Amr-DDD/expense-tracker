@@ -16,14 +16,6 @@ class AddExpense extends StatefulWidget {
 }
 
 class _AddExpense extends State<AddExpense> {
-  // get Textfield input
-  //method #1:
-  /*  
-  var _enteredValue = '';
-  void _textFieldTitle(String text) {
-    _enteredValue = text;
-  }*/
-
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime? _selectedDate;
@@ -107,8 +99,6 @@ class _AddExpense extends State<AddExpense> {
     Navigator.pop(context);
   }
 
-  // we must dispose of the TextEditingController because we no longer need it and it will stay in the memory
-  // it will also keep
   @override
   void dispose() {
     _titleController.dispose();
@@ -116,208 +106,123 @@ class _AddExpense extends State<AddExpense> {
     super.dispose();
   }
 
-  @override
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-    // this gets the amount of space taken up by keyboard from bottom
+
+    // 1. Define the repeating UI pieces ONCE as variables
+    final titleField = TextField(
+      controller: _titleController,
+      maxLength: 50,
+      decoration: const InputDecoration(label: Text("Title")),
+    );
+
+    final amountField = TextField(
+      controller: _amountController,
+      maxLength: 20,
+      decoration: const InputDecoration(
+        prefixText: '\$',
+        label: Text("Amount"),
+      ),
+      keyboardType: TextInputType.number,
+    );
+
+    final categoryDropdown = DropdownButton(
+      value: _selectedCateogry,
+      items: Category.values
+          .map(
+            (c) =>
+                DropdownMenuItem(value: c, child: Text(c.name.toUpperCase())),
+          )
+          .toList(),
+      onChanged: (value) {
+        if (value != null) setState(() => _selectedCateogry = value);
+      },
+    );
+
+    final datePicker = Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          _selectedDate == null
+              ? 'No date Selected'
+              : formater.format(_selectedDate!),
+        ),
+        IconButton(
+          onPressed: selectDate,
+          icon: const Icon(Icons.calendar_month),
+        ),
+      ],
+    );
+
+    // Using a list for the buttons so we can easily spread (...) them into any Row
+    final actionButtons = [
+      ElevatedButton.icon(
+        onPressed: _submitData,
+        icon: const Icon(Icons.add),
+        label: const Text("Add"),
+      ),
+      const SizedBox(width: 15),
+      ElevatedButton.icon(
+        onPressed: () => Navigator.pop(context),
+        icon: const Icon(Icons.cancel),
+        label: const Text("Cancel"),
+      ),
+    ];
+
+    // 2. Build the Layout using the variables
     return LayoutBuilder(
       builder: (context, constraints) {
-        final width = constraints.maxWidth;
+        final isWide = constraints.maxWidth >= 600;
+
         return SizedBox(
           width: double.infinity,
           height: double.infinity,
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                16,
-                16,
-                16,
-                keyboardSpace + 16,
-              ), // we changed the top 3lshan ynzl shwia 3lshan l camera kanet me8ateya el klam
+              padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
               child: Column(
                 children: [
-                  if (width >= 600)
+                  if (isWide) ...[
+                    // WIDE SCREEN LAYOUT
                     Row(
                       children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _titleController,
-                            maxLength: 50,
-                            decoration: const InputDecoration(
-                              label: Text("Title"),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        Expanded(
-                          child: TextField(
-                            controller: _amountController,
-                            maxLength: 20,
-                            decoration: const InputDecoration(
-                              prefixText: '\$',
-                              label: Text("Amount"),
-                            ),
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                      ],
-                    )
-                  else
-                    TextField(
-                      controller: _titleController,
-                      //method #1:
-                      //onChanged: _textFieldTitle,
-                      maxLength: 50,
-                      decoration: const InputDecoration(label: Text("Title")),
-                      // keyboardType: TextInputType.text,
-                      // this sets which keybord to open to the user, when the textfield is clicked
-                      // Some keyboards are optimized for numbers or email entry etc..
-                    ),
-                  if (width >= 600)
-                    Row(
-                      children: [
-                        DropdownButton(
-                          value: _selectedCateogry,
-                          items: Category.values
-                              .map(
-                                (category) => DropdownMenuItem(
-                                  value: category,
-                                  child: Text(category.name.toUpperCase()),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            if (value == null) {
-                              return;
-                            }
-
-                            setState(() {
-                              _selectedCateogry = value;
-                            });
-                          },
-                        ),
-                        SizedBox(width: 15),
-
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                _selectedDate == null
-                                    ? 'No date Selected'
-                                    : formater.format(
-                                        _selectedDate!,
-                                      ), // notice the "!" I added at the end which simply tells flutter that this value will never be null so that it can accept the value
-                              ),
-                              IconButton(
-                                onPressed: selectDate,
-                                icon: Icon(Icons.calendar_month),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  else
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _amountController,
-                            maxLength: 20,
-                            decoration: const InputDecoration(
-                              prefixText: '\$',
-                              label: Text("Amount"),
-                            ),
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-
-                        SizedBox(width: 15),
-
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                _selectedDate == null
-                                    ? 'No date Selected'
-                                    : formater.format(
-                                        _selectedDate!,
-                                      ), // notice the "!" I added at the end which simply tells flutter that this value will never be null so that it can accept the value
-                              ),
-                              IconButton(
-                                onPressed: selectDate,
-                                icon: Icon(Icons.calendar_month),
-                              ),
-                            ],
-                          ),
-                        ),
+                        Expanded(child: titleField),
+                        const SizedBox(width: 15),
+                        Expanded(child: amountField),
                       ],
                     ),
-                  if (width >= 600)
+                    Row(
+                      children: [
+                        categoryDropdown,
+                        const SizedBox(width: 15),
+                        Expanded(child: datePicker),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: _submitData,
-                          icon: Icon(Icons.add),
-                          label: Text("Add"),
-                        ),
-                        const SizedBox(width: 15),
-
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.cancel),
-                          label: Text("Cancel"),
-                        ),
-                      ],
-                    )
-                  else
+                      children: actionButtons,
+                    ),
+                  ] else ...[
+                    // NARROW SCREEN LAYOUT
+                    titleField,
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        DropdownButton(
-                          value: _selectedCateogry,
-                          items: Category.values
-                              .map(
-                                (category) => DropdownMenuItem(
-                                  value: category,
-                                  child: Text(category.name.toUpperCase()),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            if (value == null) {
-                              return;
-                            }
-
-                            setState(() {
-                              _selectedCateogry = value;
-                            });
-                          },
-                        ),
-                        const Spacer(),
-                        ElevatedButton.icon(
-                          onPressed: _submitData,
-                          icon: Icon(Icons.add),
-                          label: Text("Add"),
-                        ),
+                        Expanded(child: amountField),
                         const SizedBox(width: 15),
-
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.cancel),
-                          label: Text("Cancel"),
-                        ),
+                        Expanded(child: datePicker),
                       ],
                     ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        categoryDropdown,
+                        const Spacer(),
+                        ...actionButtons,
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),

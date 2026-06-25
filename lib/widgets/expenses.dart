@@ -22,7 +22,7 @@ class _ExpensesState extends State<Expenses> {
       category: Category.freetime,
     ),
     Expense(
-      title: "Zi Sushi 75 piece",
+      title: "Sugar",
       amount: 990,
       date: DateTime.now(),
       category: Category.food,
@@ -42,7 +42,7 @@ class _ExpensesState extends State<Expenses> {
     });
     ScaffoldMessenger.of(
       context,
-    ).clearSnackBars(); // delete all current existing snackbars
+    ).clearSnackBars(); 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: Duration(seconds: 3),
@@ -61,9 +61,8 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
-      useSafeArea: true,  // this allows modalBottomSheet to automatically keep an empty space at the top
-      // so that the camera + stuff at the top do not cover our items
-      isScrollControlled: true, // makes the modalSheet open in fullscreen
+      useSafeArea: true, 
+      isScrollControlled: true, 
       context: context,
       builder: (ctx) => AddExpense(_addExpense),
     );
@@ -71,8 +70,7 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;  // we get screen/device width so that we know when the device orientation is changed
-    // so that we switch from column to row or row to column when we rotate the device :)
+    final width = MediaQuery.of(context).size.width;  
 
     Widget mainContent = const Center(
       child: Text('No expenses found, add some!'),
