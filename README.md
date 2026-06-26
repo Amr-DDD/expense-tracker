@@ -14,19 +14,6 @@ A responsive, feature-rich expense tracking application built with Flutter. This
 
 ---
 
-## 📂 Project Structure
-
-* **`lib/main.dart`**: App entry point and global theme configuration for Light and Dark modes.
-* **`lib/models/expense.dart`**: Contains the `Expense` data model, `Category` enum, and `ExpenseBucket` logic.
-* **`lib/widgets/expenses.dart`**: Main dashboard, state management, and responsive layout configuration.
-* **`lib/widgets/chart/chart.dart`**: Bar chart container and summary logic for expense buckets.
-* **`lib/widgets/chart/chart_bar.dart`**: Individual dynamic UI bars for the chart visualization.
-* **`lib/widgets/expense_list/add_expense.dart`**: Modal bottom sheet form for adding new expenses with platform-specific alerts.
-* **`lib/widgets/expense_list/expense_list.dart`**: Scrollable `ListView.builder` of expenses utilizing swipe-to-delete.
-* **`lib/widgets/expense_list/expense_item.dart`**: Card UI detailing an individual expense's title, amount, category icon, and date.
-
----
-
 ## 🚀 Getting Started
 
 Follow these steps to get the app running on your local machine.
@@ -41,16 +28,11 @@ Follow these steps to get the app running on your local machine.
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/Amr-DDD/expense-tracker.git](https://github.com/Amr-DDD/expense-tracker.git)
-   
-2. **Navigate to the project directory:**
-   ```bash
-   cd expense-tracker
+   git clone https://github.com/Amr-DDD/expense-tracker.git
 
-3. **Install dependencies:**
+2. **Get dependencies:**
    ```bash
    flutter pub get
-
-4) **Run the app:**
-    ```bash
-    flutter run
+3. **Run the app:**
+   ```bash
+   flutter run
